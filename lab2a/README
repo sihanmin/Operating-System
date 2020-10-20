@@ -1,0 +1,111 @@
+NAME: Sihan Min
+EMAIL: sihanmin@yeah.net
+ID: 504807176
+
+I included the following files in my submission:
+SortedList.h, SortedList.c, lab2_add.c, lab2_list.c: 
+	implemented as required
+Makefile: 
+	containing make, clean, tests, graphs, and dist functions
+lab2_add.cvs, lab2_list.csv:
+	containing all my test results
+lab2_add-1.png, lab2_add-2.png, lab2_add-3.png, lab2_add-4.png, lab2_add-5.png
+lab2_list-1.png, lab2_list-2.png, lab2_list-3.png, lab2_list-4.png:
+	graphs created using my test results
+lab2_add.gp, lab2_list.gp:
+	sample (gnuplot) data reduction scripts provided on our webpage
+
+ 
+QUESTION 2.1.1 - causing conflicts:
+- Why does it take many iterations before errors are seen?
+	Errors happen when two threads enter into a critical section at the
+same time and they both try to do update on the same list.
+	This is known as a race condition.
+	The more iterations we have, the higher the chance that two threads
+run into a race condition.
+
+- Why does a significantly smaller number of iterations so seldom fail?
+	Because there would always be a chance that threads execute the code
+in exactly correct order even when they are potentially problematic.
+	The smaller number of iterations, the less the executions, so it would
+be more likely for executions to be “correct”.
+
+QUESTION 2.1.2 - cost of yielding:
+- Why are the --yield runs so much slower?
+- Where is the additional time going?
+	According to the man page of the sched_yield(), sched_yield() “causes 
+the calling thread to relinquish the CPU”.
+	In this sense yield would perform a system call that creates context
+switches and generates huge overhead. The time that should be used for 
+operations are used for switching to other threads.
+
+- Is it possible to get valid per-operation timings if we are using the --yield
+option? If so, explain how. 
+	It is not possible for us to get valid timings since we want to measure 
+the time for operations and now we are counting also the time for context 
+switches.
+
+QUESTION 2.1.3 - measurement errors:
+- Why does the average cost per operation drop with increasing iterations?
+	Since we have fixed overheads for creating threads, getting start and 
+end times etc, the more iterations we have, the average overhead per operation
+added becomes less.
+
+- If the cost per iteration is a function of the number of iterations, how do 
+we know how many iterations to run (or what the "correct" cost is)?
+	When we have small iterations number, the average overhead on each 
+iteration is huge and can even dominate the average time. The inaccuracy 
+becomes less significant as we increase iterations.
+	At a point when iteration number is big enough, the average overhead 
+would become very small that we can ignore it in the average time.
+
+QUESTION 2.1.4 - costs of serialization:
+- Why do all of the options perform similarly for low numbers of threads?
+	When the number of threads is very low, threads almost don’t need to
+wait for the locks due to the low traffic, so we can’t see too much of a 
+difference on their performance in each case.
+
+- Why do the three protected operations slow down as the number of threads rises?
+	As the number of threads increases, each thread would spend more time 
+waiting for the only lock in the protected cases, since more threads are likely 
+to try getting into the critical section at the same time.
+
+
+QUESTION 2.2.1 - scalability of Mutex
+- Compare the variation in time per mutex-protected operation vs the number of
+threads in Part-1 (adds) and Part-2 (sorted lists).
+	As the number of threads increases, both curves shows a increasing cost 
+per operations. However, in the Part-1(adds), the increasing of time gradually 
+slows down, while Part-2 if more like a linear increase.
+
+- Comment on the general shapes of the curves, and explain why they have this 
+shape.
+	In Part 1, the curve concave down. The end of the curve becomes flat. 
+	In Part 2, the shape is close to a linear line.
+	Part 1 has very simple operations so the cost of mutex and other 
+overheads are relatively big at first when total operations is small, while in 
+Part 2 the operation in critical sections are complicated so the average 
+overheads stay relatively constant as total operations increases. 
+
+- Comment on the relative rates of increase and differences in the shapes of 
+the curves, and offer an explanation for these differences.
+	The rate of increase in Part 1 is relatively lower than Part 2.
+	I think it is because the critical sections guarded in Part 1 is much
+shorter than that of Part 2, so it is not as expensive as Part 2 to ensure 
+mutual exclusive
+
+QUESTION 2.2.2 - scalability of spin locks
+- Compare the variation in time per protected operation vs the number of 
+threads for list operations protected by Mutex vs Spin locks. Comment on the 
+general shapes of the curves, and explain why they have this shape.
+	In both of the protected cases, the time per operation increases as
+the number of threads increases. As mentioned above, there is always only one
+lock, so the average waiting time for each threads would increase when there
+are more threads competing for the lock. Therefore, we can see increasing 
+curves in both cases.
+
+- Comment on the relative rates of increase and differences in the shapes of
+the curves, and offer an explanation for these differences.
+	Spin lock case has a higher rate of increase and is more expensive to 
+use. When a thread try to get a spin_lock, it would just spin the while loop 
+and waste more CPU cycles.

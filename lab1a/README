@@ -1,0 +1,8 @@
+NAME: Sihan Min
+EMAIL: sihanmin@yeah.net
+ID: 504807176
+
+    In order to fully understand a terminal, I read "The GNU C Library" Chapter
+17. In particular, I found 17.7 "Noncanonical Mode Example" very helpful in
+building my own noncanonical mode terminal. Also, I read the manual page for
+functions like fork(2), exec(3), pipe(2), and poll(2) to ensure correct usage.

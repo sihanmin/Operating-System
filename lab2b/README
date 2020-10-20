@@ -1,0 +1,99 @@
+#NAME: Sihan Min
+#EMAIL: sihanmin@yeah.net
+#ID: 504807176
+
+My lab2b tar.gz file contains:
+SortedList.h, SortedList.c, lab2_list.c: code files as required
+Makefile: makefile with functions of default, tests, profile.out, profile, tests, graphs, clean, dist
+lab2b_list.csv: my results for all of test runs.
+profile.out - execution profiling report that shows where time was spent in the un-partitioned
+ spin-lock implementation.
+lab2b_1.png, lab2b_2.png, lab2b_3.png, lab2b_4.png, lab2b_5.png: five graphs as required
+
+QUESTION 2.3.1 - Cycles in the basic list implementation:
+- Where do you believe most of the cycles are spent in the 1 and 2-thread list tests?
+	I believe the most of the cycles are spend in the actual list operations, such as 
+deleting, inserting, looking-up nodes. 
+
+- Why do you believe these to be the most expensive parts of the code?
+	If there are only small number of threads, these should be the parts that take most of 
+the time. However, if there are multiple threads, the time would be wasted mostly by waiting 
+for the lock.
+
+- Where do you believe most of the time/cycles are being spent in the high-thread spin-lock 
+tests?
+	I think in high-thread spin-lock, most of the time would be wasted in spinning to 
+retry for the lock.
+
+QUESTION 2.3.2 - Execution Profiling: 
+- Where (what lines of code) are consuming most of the cycles when the spin-lock version of 
+the list exerciser is run with a large number of threads?
+	When the spin-lock version of the list is run with a large number of threads, the 
+397th, 425th, and 433th line in my thread function are caught most of the times (totally 
+around a thousand times). They are all lines of “lock(index, &thr_time);”, which is a parser 
+function for acquiring lock.
+
+- Why does this operation become so expensive with large numbers of threads?
+	When the threads are in large number, more threads are trying to get a few lock at the 
+same time, causing most of them spinning and waiting. In this sense, a lot of time are wasted 
+in this operation of trying to get the scarce locks.
+
+QUESTION 2.3.3 - Mutex Wait Time:
+-Look at the average time per operation (vs # threads) and the average wait-for-mutex time (vs
+ #threads).
+- Why does the average lock-wait time rise so dramatically with the number of contending 
+threads?
+	As I mentioned above, more contending threads means more average waiting time. Only 
+the thread that hold the lock can produce throughput. The more threads we have, the more 
+threads waiting for the locks, and the longer each lock-wait operation takes, so the average 
+lock-wait time rise so dramatically.
+
+- Why does the completion time per operation rise (less dramatically) with the number of 
+contending threads?
+	Since for Mutex, when the thread can not get the lock, it will sleep/yield and the 
+completion time per operation doesn't include the time for waiting. Therefore, the completion
+ time per operation rise less dramatically. 
+
+- How is it possible for the wait time per operation to go up faster (or higher) than the 
+completion time per operation?
+	Because when we are counting the average lock time, we would count the time when a 
+thread is put into sleep. Also multiple threads are probably waiting for the same lock at the 
+same time, so the lock-wait time may be added up for multiple times even with a single lock. 
+However, we only time one start and one end for the operations. Therefore, the wait time per 
+operation to go up faster (or higher) than the completion time per operation.
+
+QUESTION 2.3.4 - Performance of Partitioned Lists
+- Explain the change in performance of the synchronized methods as a function of the number of 
+lists.
+	As the number of lists increases, the performance should improve as well. Since the 
+lock can be obtained by more threads, which decrease the potential of lock contention, and 
+thus improve the performance.
+
+- Should the throughput continue increasing as the number of lists is further increased? If
+ not, explain why not.
+	No. If the number of lists grows far over the number of threads, then the performance
+ would not increase anymore, since there are no improvement in decreasing the lock contention.
+
+- It seems reasonable to suggest the throughput of an N-way partitioned list should be 
+equivalent to the throughput of a single list with fewer (1/N) threads. Does this appear to be
+ true in the above curves? If not, explain why not.
+	No. In the graph, I found N-way partitioned list is more efficient than (1/N) threads.
+The partitioned list decreases the time wasted in competing the locks, which definitely 
+improves the performance. Also, while partitioning a list, we reduces the number of time in 
+the critical section (such as searching for one node).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

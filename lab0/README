@@ -1,0 +1,13 @@
+NAME: Sihan Min
+EMAIL: sihanmin@yeah.net
+ID: 504807176
+
+    lab0-504807176.tar.gz includes this README file, a lab0.c file that copies
+ its standard input to its standard output, a Makefile that builds the program
+ and the tarball, and two screenshots backtrace.png and breakpoint.png of gdb.
+
+    Smoke-test cases are the tests on --input flag and --output flag under nor
+mal situations, a test on missing argument of the --input flag, and a test on 
+undefined flag.
+
+    No other outside sources beside Linux manual page are used in this project.
