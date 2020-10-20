@@ -1,0 +1,9 @@
+#NAME: Sihan Min
+#EMAIL: sihanmin@yeah.net
+#ID: 504807176
+
+My submission includes:
+lab4c_tcp.c lab4c_tls.c: two C files implemented as instructed on the spec
+Makefile: a make file that includes make(builds executable), make clean(cleans 
+	  up the products), and make dist(creates tarball for submission)
+README: an explanation of my project
